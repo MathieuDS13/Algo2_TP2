@@ -15,11 +15,7 @@ public class OrthographicCorrector {
         for (String word :
                 dico.getWords()) {
             computeAndAddTrigrammes("<" + word + ">");
-            //TODO ajouter les trigrammes du mot
         }
-
-        Set<String> set = trigrammes.get(new String("que"));
-
     }
 
     public void computeAndAddTrigrammes(String word) {
