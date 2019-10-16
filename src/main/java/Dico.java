@@ -17,4 +17,8 @@ public class Dico {
         return words.contains(word);
     }
 
+    public Set<String> getWords(){
+        return words;
+    }
+
 }

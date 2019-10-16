@@ -14,7 +14,7 @@ public class DicoParser {
             String line;
 
             while((line = reader.readLine()) != null){
-                dico.addWord(line);
+                dico.addWord(line.toLowerCase());
             }
 
 

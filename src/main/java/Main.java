@@ -9,5 +9,7 @@ public class Main {
         System.out.println(dico.contains("banane"));
 
         System.out.println(String.format("Temps écoulé : %.2f ms", (System.nanoTime() - start)/1e6));
+
+        OrthographicCorrector corrector = new OrthographicCorrector(dico);
     }
 }
