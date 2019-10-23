@@ -53,7 +53,7 @@ public class OrthographicCorrector {
         return firstChar == secondChar ? 0 : 1;
     }
 
-    public void printWordSugestions(String origin, /*tableau de mots*/String[] suggestions){
+    public void printWordSugestions(String origin, /*tableau de mots*/ArrayList<String> suggestions){
         System.out.print(origin + " -> ");
         for (String suggestion :
                 suggestions) {
@@ -62,19 +62,29 @@ public class OrthographicCorrector {
         System.out.print("\n");
     }
 
-    private static String[] processPossibleWords(String from){
+    private ArrayList<String> processPossibleWords(String from){
+        ArrayList<String> possibilities = new ArrayList<>();
+        if(dico.contains(from)){
+            possibilities.add(from);
+            return possibilities;
+        } return new ArrayList<>();
+
 
         //Calculer les trigrammes de from
         //Extraire les mots qui ont au moins un trigramme en commun
+        //Calculer le nombre d'occurence de chaque mot dans la liste des mots associés aux trigrammes de from
+        //-> ceci donne un poids, renvoyer les 100 mots de plus haut poids puis lancer calculateAndPrintSuggestions()
 
 
         //Calculer les 100 mots qui ont le plus de trigrammes communs avec le mot from et les renvoyer
     }
 
 
-    public void calculateAndPrintSuggestions(String word){
-
-        String[] suggestions = new String[5];
+    public void calculateAndPrintSuggestions(String word, ArrayList<String> possibilities){
+        if(possibilities.size() == 1){
+            printWordSugestions(word, possibilities);
+        }
+        ArrayList<String> suggestions = new ArrayList<>();
         printWordSugestions(word, suggestions);
     }
 }
