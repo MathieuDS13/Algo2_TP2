@@ -9,15 +9,15 @@ public class Dico {
         this.words = new HashSet<>();
     }
 
-    public void addWord(String word){
+    public void addWord(String word) {
         words.add(word);
     }
 
-    public boolean contains(String word){
+    public boolean contains(String word) {
         return words.contains(word);
     }
 
-    public Set<String> getWords(){
+    public Set<String> getWords() {
         return words;
     }
 

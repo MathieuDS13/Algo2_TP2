@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class OrthographicCorrector {
 
@@ -26,6 +24,58 @@ public class OrthographicCorrector {
             trigrammes.computeIfAbsent(trigramme, k -> new HashSet<>());
             trigrammes.get(trigramme).add(word);
         }
+    }
+
+    private static int min(int... numbers) {
+        return Arrays.stream(numbers).min().orElse(Integer.MAX_VALUE);
+    }
+
+    public static int calculate(String leftWord, String rightWord) {
+        int[][] costMatrix = new int[leftWord.length() + 1][rightWord.length() + 1];
+        for (int indexFirstWord = 0; indexFirstWord <= leftWord.length(); indexFirstWord++) {
+            for (int indexSecondWord = 0; indexSecondWord <= rightWord.length(); indexSecondWord++) {
+                if (indexFirstWord == 0) {
+                    costMatrix[indexFirstWord][indexSecondWord] = indexSecondWord;
+                } else if (indexSecondWord == 0) {
+                    costMatrix[indexFirstWord][indexSecondWord] = indexFirstWord;
+                } else {
+                    costMatrix[indexFirstWord][indexSecondWord] = min(costMatrix[indexFirstWord - 1][indexSecondWord - 1]
+                                    + costOfSubstitution(leftWord.charAt(indexFirstWord - 1), rightWord.charAt(indexSecondWord - 1)),
+                            costMatrix[indexFirstWord - 1][indexSecondWord] + 1,
+                            costMatrix[indexFirstWord][indexSecondWord - 1] + 1);
+                }
+            }
+        }
+        return costMatrix[leftWord.length()][rightWord.length()];
+    }
+
+    private static int costOfSubstitution(char firstChar, char secondChar) {
+        return firstChar == secondChar ? 0 : 1;
+    }
+
+    public void printWordSugestions(String origin, /*tableau de mots*/String[] suggestions){
+        System.out.print(origin + " -> ");
+        for (String suggestion :
+                suggestions) {
+            System.out.print(suggestion + " ; ");
+        }
+        System.out.print("\n");
+    }
+
+    private static String[] processPossibleWords(String from){
+
+        //Calculer les trigrammes de from
+        //Extraire les mots qui ont au moins un trigramme en commun
+
+
+        //Calculer les 100 mots qui ont le plus de trigrammes communs avec le mot from et les renvoyer
+    }
+
+
+    public void calculateAndPrintSuggestions(String word){
+
+        String[] suggestions = new String[5];
+        printWordSugestions(word, suggestions);
     }
 }
 

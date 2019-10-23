@@ -6,10 +6,7 @@ public class Main {
         String filepath = "C:\\Users\\Utilisateur\\Documents\\Cours L3 informatique\\Algorithmique 2\\TP\\TP2\\dico.txt";
 
         Dico dico = DicoParser.parseFileToDico(filepath);
-        System.out.println(dico.contains("banane"));
-
-        System.out.println(String.format("Temps écoulé : %.2f ms", (System.nanoTime() - start)/1e6));
-
         OrthographicCorrector corrector = new OrthographicCorrector(dico);
+        System.out.println(String.format("Temps écoulé : %.2f ms", (System.nanoTime() - start)/1e6));
     }
 }
