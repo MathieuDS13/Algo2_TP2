@@ -13,10 +13,6 @@ public class Dico {
         words.add(word);
     }
 
-    public boolean contains(String word) {
-        return words.contains(word);
-    }
-
     public Set<String> getWords() {
         return words;
     }

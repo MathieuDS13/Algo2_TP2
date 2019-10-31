@@ -4,9 +4,9 @@ import java.io.IOException;
 
 public class FileCorrector {
 
-  Dico dico;
-  OrthographicCorrector corrector;
-  String filepath;
+    Dico dico;
+    OrthographicCorrector corrector;
+    String filepath;
 
     public FileCorrector(String dicoPath, String filepath) {
         this.dico = DicoParser.parseFileToDico(dicoPath);
@@ -14,12 +14,12 @@ public class FileCorrector {
         this.filepath = filepath;
     }
 
-    public void printCorrections(){
+    public void printCorrections() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
             String line;
 
-            while((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 corrector.correctWord(line);
             }
         } catch (IOException e) {

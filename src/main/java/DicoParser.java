@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class DicoParser {
 
-    public static Dico parseFileToDico(String filepath){
+    public static Dico parseFileToDico(String filepath) {
 
         Dico dico = new Dico();
 
@@ -13,7 +13,7 @@ public class DicoParser {
             BufferedReader reader = new BufferedReader(new FileReader(filepath));
             String line;
 
-            while((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 dico.addWord(line.toLowerCase());
             }
 

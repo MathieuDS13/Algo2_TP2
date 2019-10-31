@@ -1,7 +1,5 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
-import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.toMap;
 
 public class OrthographicCorrector {
@@ -66,33 +64,6 @@ public class OrthographicCorrector {
         System.out.print("\n");
     }
 
-    private ArrayList<String> processPossibleWords(String from) {
-        ArrayList<String> possibilities = new ArrayList<>();
-        if (dico.contains(from)) {
-            possibilities.add(from);
-            return possibilities;
-        }
-        return new ArrayList<>();
-
-
-        //Calculer les trigrammes de from
-        //Extraire les mots qui ont au moins un trigramme en commun
-        //Calculer le nombre d'occurence de chaque mot dans la liste des mots associés aux trigrammes de from
-        //-> ceci donne un poids, renvoyer les 100 mots de plus haut poids puis lancer calculateAndPrintSuggestions()
-
-
-        //Calculer les 100 mots qui ont le plus de trigrammes communs avec le mot from et les renvoyer
-    }
-
-
-    public void calculateAndPrintSuggestions(String word, ArrayList<String> possibilities) {
-        if (possibilities.size() == 1) {
-            printWordSugestions(word, possibilities);
-        }
-        ArrayList<String> suggestions = new ArrayList<>();
-        printWordSugestions(word, suggestions);
-    }
-
 
     private static ArrayList<String> computeTrigrammes(String word) {
         ArrayList<String> trigrammes = new ArrayList<>();
@@ -113,7 +84,7 @@ public class OrthographicCorrector {
             for (String wordPossibility :
                     this.trigrammes.getOrDefault(trigramme, new HashSet<String>() {
                     })) {
-                if(wordPossibility.isEmpty()) continue;
+                if (wordPossibility.isEmpty()) continue;
                 possibilities.put(wordPossibility, possibilities.getOrDefault(wordPossibility, 0) + 1);
             }
         }
@@ -131,7 +102,7 @@ public class OrthographicCorrector {
         int[] distances = new int[5];
         ArrayList<String> bestPossibilities = new ArrayList<>();
         for (int index = 0; index < 100; index++) {
-            if(possibilitiesArray[index] == null) break;
+            if (possibilitiesArray[index] == null) break;
             int distance = calculateWordDistance(possibilitiesArray[index], word);
             if (bestPossibilities.size() < 5) {
                 distances[bestPossibilities.size()] = distance;
@@ -151,15 +122,3 @@ public class OrthographicCorrector {
 
     }
 }
-
-
-//TODO Implémenter le calcul de distance entre deux mots du dictionnaire
-
-//TODO Implémenter la construction des trigrammes d'un mot
-
-//TODO calculer le nombre d'occurences d'un mot dans la liste des mots associés aux trigrammes du mot
-
-//TODO sélectionner 100 mots qui ont le le plus de trigrammes communs avec le mot
-
-//TODO Choisir parmis 5 mots possibles le bon selon la distance d'édition
-
