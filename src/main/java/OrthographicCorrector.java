@@ -1,4 +1,8 @@
+import java.lang.reflect.Array;
 import java.util.*;
+
+import static java.util.stream.Collectors.averagingDouble;
+import static java.util.stream.Collectors.toMap;
 
 public class OrthographicCorrector {
 
@@ -30,7 +34,7 @@ public class OrthographicCorrector {
         return Arrays.stream(numbers).min().orElse(Integer.MAX_VALUE);
     }
 
-    public static int calculate(String leftWord, String rightWord) {
+    public static int calculateWordDistance(String leftWord, String rightWord) {
         int[][] costMatrix = new int[leftWord.length() + 1][rightWord.length() + 1];
         for (int indexFirstWord = 0; indexFirstWord <= leftWord.length(); indexFirstWord++) {
             for (int indexSecondWord = 0; indexSecondWord <= rightWord.length(); indexSecondWord++) {
@@ -53,7 +57,7 @@ public class OrthographicCorrector {
         return firstChar == secondChar ? 0 : 1;
     }
 
-    public void printWordSugestions(String origin, /*tableau de mots*/ArrayList<String> suggestions){
+    public void printWordSugestions(String origin, /*tableau de mots*/ArrayList<String> suggestions) {
         System.out.print(origin + " -> ");
         for (String suggestion :
                 suggestions) {
@@ -62,12 +66,13 @@ public class OrthographicCorrector {
         System.out.print("\n");
     }
 
-    private ArrayList<String> processPossibleWords(String from){
+    private ArrayList<String> processPossibleWords(String from) {
         ArrayList<String> possibilities = new ArrayList<>();
-        if(dico.contains(from)){
+        if (dico.contains(from)) {
             possibilities.add(from);
             return possibilities;
-        } return new ArrayList<>();
+        }
+        return new ArrayList<>();
 
 
         //Calculer les trigrammes de from
@@ -80,12 +85,70 @@ public class OrthographicCorrector {
     }
 
 
-    public void calculateAndPrintSuggestions(String word, ArrayList<String> possibilities){
-        if(possibilities.size() == 1){
+    public void calculateAndPrintSuggestions(String word, ArrayList<String> possibilities) {
+        if (possibilities.size() == 1) {
             printWordSugestions(word, possibilities);
         }
         ArrayList<String> suggestions = new ArrayList<>();
         printWordSugestions(word, suggestions);
+    }
+
+
+    private static ArrayList<String> computeTrigrammes(String word) {
+        ArrayList<String> trigrammes = new ArrayList<>();
+        for (int index = 0; index < word.length() - 3; index++) {
+            String trigramme = word.substring(index, index + 3);
+            if (trigramme.length() <= 2) continue;
+            trigrammes.add(trigramme);
+        }
+        return trigrammes;
+    }
+
+    public void correctWord(String word) {
+        ArrayList<String> wordTrigrammes = computeTrigrammes(word);
+        Map<String, Integer> possibilities = new HashMap<>();
+
+        for (String trigramme :
+                wordTrigrammes) {
+            for (String wordPossibility :
+                    this.trigrammes.getOrDefault(trigramme, new HashSet<String>() {
+                    })) {
+                if(wordPossibility.isEmpty()) continue;
+                possibilities.put(wordPossibility, possibilities.getOrDefault(wordPossibility, 0) + 1);
+            }
+        }
+
+        LinkedHashMap sorted = possibilities
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(
+                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+
+        String[] possibilitiesArray = (String[]) sorted.keySet().toArray(new String[100]);
+
+        int[] distances = new int[5];
+        ArrayList<String> bestPossibilities = new ArrayList<>();
+        for (int index = 0; index < 100; index++) {
+            if(possibilitiesArray[index] == null) break;
+            int distance = calculateWordDistance(possibilitiesArray[index], word);
+            if (bestPossibilities.size() < 5) {
+                distances[bestPossibilities.size()] = distance;
+                bestPossibilities.add(possibilitiesArray[index]);
+            } else {
+                for (int distanceIndex = 0; distanceIndex < 5; distanceIndex++) {
+                    if (distances[distanceIndex] > distance) {
+                        distances[distanceIndex] = distance;
+                        bestPossibilities.set(distanceIndex, possibilitiesArray[index]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        printWordSugestions(word, bestPossibilities);
+
     }
 }
 
