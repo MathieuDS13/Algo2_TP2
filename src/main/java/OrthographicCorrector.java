@@ -70,20 +70,17 @@ public class OrthographicCorrector {
         for (int index = 0; index < word.length() - 3; index++) {
             String trigramme = word.substring(index, index + 3);
             if (trigramme.length() <= 2) continue;
-            trigrammes.add(trigramme);
+            if (!trigrammes.contains(trigramme)) trigrammes.add(trigramme);
         }
         return trigrammes;
     }
 
     public void correctWord(String word) {
-        ArrayList<String> wordTrigrammes = computeTrigrammes(word);
+        ArrayList<String> wordTrigrammes = computeTrigrammes("<" + word + ">");
         Map<String, Integer> possibilities = new HashMap<>();
 
-        for (String trigramme :
-                wordTrigrammes) {
-            for (String wordPossibility :
-                    this.trigrammes.getOrDefault(trigramme, new HashSet<String>() {
-                    })) {
+        for (String trigramme : wordTrigrammes) {
+            for (String wordPossibility : this.trigrammes.getOrDefault(trigramme, new HashSet<>())) {
                 if (wordPossibility.isEmpty()) continue;
                 possibilities.put(wordPossibility, possibilities.getOrDefault(wordPossibility, 0) + 1);
             }
@@ -97,14 +94,16 @@ public class OrthographicCorrector {
                         toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                 LinkedHashMap::new));
 
+
         String[] possibilitiesArray = (String[]) sorted.keySet().toArray(new String[100]);
 
         int[] distances = new int[5];
         ArrayList<String> bestPossibilities = new ArrayList<>();
+
         for (int index = 0; index < 100; index++) {
             if (possibilitiesArray[index] == null) break;
             int distance = calculateWordDistance(possibilitiesArray[index], word);
-            if (bestPossibilities.size() < 5) {
+            if (bestPossibilities.size() != 5) {
                 distances[bestPossibilities.size()] = distance;
                 bestPossibilities.add(possibilitiesArray[index]);
             } else {
